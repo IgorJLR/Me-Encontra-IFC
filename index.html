@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.00">
+    <title>Map Leaflet</title>
+
+    <!-- leaflet css  -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="leaflet-search.css" />
+    <link rel="stylesheet" href="style.css" />
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 99.7%;
+            height: 98.1vh;
+        }
+        
+    </style>
+</head>
+
+<body>
+
+    <div id="map">
+    </div>
+
+ </ul>
+
+</body>
+
+</html>
+
+<!-- leaflet js  -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="./data/point.js"></script>
+<script src="./data/polygon.js"></script>
+<script src="leaflet-search.js"></script>
+
+
+
+<script>
+    
+        var data = [
+    {"loc":[-27.01537468200277,-48.65880534052849], "title":"Lab Hard", "andar":"primeiro"},
+    {"loc":[-27.015428446614937,-48.65884155035018], "title":"Lab Soft", "andar":"primeiro"},
+    {"loc":[-27.015476237359707,-48.65887239575386], "title":"Lab Soft II", "andar":"primeiro"},
+    {"loc":[-27.01540813554225,-48.658685982227325], "title":"Lab Web", "andar":"primeiro"},
+    {"loc":[-27.015448757683938,-48.65871414542198], "title":"Lab Redes", "andar":"primeiro"},
+    {"loc":[-27.015534780994347,-48.658786565065384], "title":"Lab Mat(i)²", "andar":"primeiro"},	
+    {"loc":[-27.01548699027448,-48.65874633193016], "title":"Coordenação", "andar":"primeiro"},
+    {"loc":[-27.015929053657796,-48.659074902534485], "title":"Banheiros", "andar":"primeiro"},
+    {"loc":[-27.015952948926284,-48.65909904241562], "title":"Professores Informática", "andar":"primeiro"},
+    {"loc":[-27.016000739447982,-48.659123182296746], "title":"Lab Laser", "andar":"primeiro"},
+    {"loc":[-27.016041361375457,-48.65916073322296], "title":"Lagi", "andar":"primeiro"},	
+    {"loc":[-27.016093930906862,-48.65920364856719], "title":"Lab Gex", "andar":"primeiro"},
+    {"loc":[-27.015960117505838,-48.65905076265335], "title":"Professores Gestão de Negócios", "andar":"primeiro"},
+    {"loc":[-27.016038971850715,-48.6590950191021], "title":"Lab Soft III", "andar":"primeiro"},
+    {"loc":[-27.016093930906862,-48.65914061665535], "title":"Lapi Mob", "andar":"primeiro"},
+    ];
+
+
+
+    // Map initialization 
+    var map = L.map('map').setView([-27.015850419315576, -48.65868889442329], 50);
+    map.setMinZoom( 16 );
+    map.setMaxBounds(L.geoJSON(polygonJson).getBounds());
+
+
+    //google satellite
+    googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 21,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+    googleSat.addTo(map);
+
+    var markersLayer = new L.LayerGroup();	//layer contain searched elements
+	map.addLayer(markersLayer);
+
+	map.addControl( new L.Control.Search({
+		container: 'findbox',
+		layer: markersLayer,
+		initial: false,
+		collapsed: false
+	}) 
+    .on('search:locationfound', function(e) {
+		e.layer.openPopup();
+	}));
+	//inizialize search control
+
+	////////////populate map with markers from sample data
+	for(i in data) {
+		var title = data[i].title,	//value searched
+			loc = data[i].loc,
+            andar =data[i].andar,		//position found
+			marker = new L.Marker(new L.latLng(loc), {title: title}, {andar: andar}, );//se property searched
+		marker.bindPopup('Sala: '+ title + " está no "+andar+" andar." );
+        marker.setOpacity(0);
+		markersLayer.addLayer(marker);
+	}
+    
+
+
+
+
+</script>
+
